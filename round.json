@@ -1,0 +1,39 @@
+{
+  "whose_turn": "JQ",
+  "turn_order": [
+    "JQ",
+    "Trav"
+  ],
+  "deck": [
+    11
+  ],
+  "set_aside_face_up": [12,13,14],
+  "set_aside_face_down": [15],
+  "players": [
+    {
+      "name": "JQ",
+      "hand": [
+        10,
+        7
+      ],
+      "played": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "Trav",
+      "hand": [
+        9
+      ],
+      "played": [
+        4,
+        5,
+        6,
+        8
+      ]
+    }
+  ]
+}
