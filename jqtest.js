@@ -1,5 +1,5 @@
 const fs = require('fs');
-
+;
 var CARDS = JSON.parse(fs.readFileSync('cards.json'));
 var ROUND = {}
 
@@ -44,7 +44,7 @@ function makeDeck(recipe) {
 function createRound(round_config) {
     var round = {};
     round.deck = makeDeck(round_config.deck_recipe)
-    //var players = makePlayers(round_config.players) 
+    //round.players = makePlayers(round_config.players) 
     return round
 }
 
@@ -57,3 +57,19 @@ fs.readFile('round_config.json', function (err, data) {
   round = createRound(JSON.parse(data));
   saveRound(round);
 });
+
+function randomInt( min, max ) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffle( deck ) {
+  for ( var i = 0; i < deck.length - 1; i++ ) {
+    var j = randomInt( 0, deck.length - 1 );
+    var temp =  deck[i];
+    deck[i] = deck[j];
+    deck[j] = temp;
+  }
+  return deck;
+}
