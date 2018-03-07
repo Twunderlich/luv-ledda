@@ -42,9 +42,10 @@ function makeDeck(recipe) {
 }
 
 function createRound(round_config) {
-    var deck = makeDeck(round_config.deck_recipe)
+    var round = {};
+    round.deck = makeDeck(round_config.deck_recipe)
     //var players = makePlayers(round_config.players) 
-    return deck
+    return round
 }
 
 function saveRound(round) {
