@@ -1,0 +1,14 @@
+[
+  {
+    "rank": 1,
+    "name": "Guard",
+    "img": "guard.jpg",
+    "rule": "Guess a player's hand; if correct the player is out."
+  },
+  {
+    "rank": 2,
+    "name": "Priest",
+    "img": "priest.jpg",
+    "rule": "Choose another player: Look at their hand."
+  }
+]
