@@ -1,16 +1,18 @@
 {
-    "deck_recipe": [
-        {
-            "card": "Guard",
-            "quantity": 5
-        },
-        {
-            "card": "Priest",
-            "quantity": 2
-        }
-    ],
-    "players": [
-        "JQ",
-        "Trav"
-    ]
+  "deck_recipe": [
+    {
+      "card": "Guard",
+      "quantity": 5
+    },
+    {
+      "card": "Priest",
+      "quantity": 2
+    }
+  ],
+  "set_aside_faceup": 3,
+  "set_aside_facedown": 1,
+  "players": [
+    "JQ",
+    "Trav"
+  ]
 }
