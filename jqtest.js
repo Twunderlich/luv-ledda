@@ -2,6 +2,7 @@ const fs = require('fs');
 ;
 var CARDS = JSON.parse(fs.readFileSync('cards.json'));
 var ROUND = {}
+var PLAYERS = JSON.parse(fs.readFileSync('players.json'));
 
 // console.log(CARDS)
 // {
@@ -23,6 +24,7 @@ var ROUND = {}
 //     }
 //   ]
 // }
+
 
 function makeDeck(recipe) {
     var deck = []
