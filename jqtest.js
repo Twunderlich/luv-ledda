@@ -1,8 +1,9 @@
 const fs = require('fs');
-;
+
+const CONFIG = JSON.parse( fs.readFileSync( 'round_config.json' ) );
 var CARDS = JSON.parse(fs.readFileSync('cards.json'));
 var ROUND = {}
-var PLAYERS = JSON.parse(fs.readFileSync('players.json'));
+var PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
 
 // console.log(CARDS)
 // {
@@ -25,7 +26,6 @@ var PLAYERS = JSON.parse(fs.readFileSync('players.json'));
 //   ]
 // }
 
-
 function makeDeck(recipe) {
     var deck = []
     var id = 0
@@ -45,7 +45,9 @@ function makeDeck(recipe) {
 
 function createRound(round_config) {
     var round = {};
-    round.deck = makeDeck(round_config.deck_recipe)
+    round.players = [ 'Trav', 'JQ' ];
+    round.turn_order = shuffle( round.players );
+    round.deck = makeDeck(round_config.deck_recipe);
     //round.players = makePlayers(round_config.players) 
     return round
 }
