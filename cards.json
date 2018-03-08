@@ -10,5 +10,41 @@
     "name": "Priest",
     "img": "priest.jpg",
     "rule": "Choose another player: Look at their hand."
+  },
+  {
+    "rank": 3,
+    "name": "Baron",
+    "img": "baron.jpg",
+    "rule": "Choose another player: Compare hands; player with lower value is out."
+  },
+  {
+    "rank": 4,
+    "name": "Handmaid",
+    "img": "handmaid.jpg",
+    "rule": "Until next turn, ignore all effects from other player's cards."
+  },
+  {
+    "rank": 5,
+    "name": "Prince",
+    "img": "prince.jpg",
+    "rule": "Choose any player: They discard their hand and draw new card."
+  },
+  {
+    "rank": 6,
+    "name": "Kind",
+    "img": "kind.jpg",
+    "rule": "Choose another player: Trade hands with them"
+  },
+  {
+    "rank": 7,
+    "name": "Countess",
+    "img": "countess.jpg",
+    "rule": "if you have this card and 'King' or 'Prince': You must discard this card."
+  },
+  {
+    "rank": 8,
+    "name": "Princess",
+    "img": "princess.jpg",
+    "rule": "If this card is discarded: you are out."
   }
 ]
