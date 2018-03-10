@@ -47,7 +47,13 @@ function createRound(round_config) {
     var round = {};
     round.players = [ 'Trav', 'JQ' ];
     round.turn_order = shuffle( round.players );
-    round.deck = makeDeck(round_config.deck_recipe);
+    round.deck = shuffle( makeDeck(round_config.deck_recipe) );
+    round.set_aside_face_down = [ round.deck.pop() ]; 
+    round.set_aside_face_up = function() {
+      if ( round.players.length === 2 ) {
+        return round.deck.splice( round.deck.length - 3, 3 );
+      } 
+    }();
     //round.players = makePlayers(round_config.players) 
     return round
 }
