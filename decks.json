@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Love Letter",
+    "recipe": [
+      {
+        "card": "Guard",
+        "quantity": 5
+      },
+      {
+        "card": "Priest",
+        "quantity": 2
+      },
+      {
+        "card": "Baron",
+        "quantity": 2
+      },
+      {
+        "card": "Handmaid",
+        "quantity": 2
+      },
+      {
+        "card": "Prince",
+        "quantity": 2
+      },
+      {
+        "card": "King",
+        "quantity": 1
+      },
+      {
+        "card": "Countess",
+        "quantity": 1
+      },
+      {
+        "card": "Princess",
+        "quantity": 1
+      }
+    ]
+  }
+]
