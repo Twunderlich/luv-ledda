@@ -1,9 +1,11 @@
 const fs = require('fs');
 
 const CONFIG = JSON.parse( fs.readFileSync( 'round_config.json' ) );
-var CARDS = JSON.parse(fs.readFileSync('cards.json'));
-var ROUND = {}
-var PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
+const CARDS = JSON.parse(fs.readFileSync('cards.json'));
+let ROUND = {}
+let PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
+
+console.log(  )
 
 // console.log(CARDS)
 // {
@@ -27,15 +29,15 @@ var PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
 // }
 
 function makeDeck(recipe) {
-    var deck = []
-    var id = 0
+    let deck = []
+    let id = 0
     recipe.forEach(function (card_recipe) {
-        var template = CARDS.find(function (card) {
+        let template = CARDS.find(function (card) {
             return card.name === card_recipe.card
         });
-        for (var i=0; i < card_recipe.quantity; i++){
+        for (let i=0; i < card_recipe.quantity; i++){
             id += 1;
-            var card = Object.assign({}, template);
+            let card = Object.assign({}, template);
             card.id = id;
             deck.push(card);
         }
@@ -43,10 +45,18 @@ function makeDeck(recipe) {
     return deck
 }
 
-function createRound(round_config) {
-    var round = {};
-    round.players = [ 'Trav', 'JQ' ];
-    round.turn_order = shuffle( round.players );
+function makePlayers( players ) {
+  playerObjects = []
+  players.forEach( function( player ) {
+    playerObjects.push( { name: player, hand: [], played: [], in_round: true })
+  } );
+  return playerObjects;
+}
+
+function createRound( round_config, players ) {
+    let round = {};
+    round.players = makePlayers( players );
+    round.turn_order = shuffle( players );
     round.deck = shuffle( makeDeck(round_config.deck_recipe) );
     round.set_aside_face_down = [ round.deck.pop() ]; 
     round.set_aside_face_up = function() {
@@ -54,9 +64,26 @@ function createRound(round_config) {
         return round.deck.splice( round.deck.length - 3, 3 );
       } 
     }();
-    //round.players = makePlayers(round_config.players) 
+    deal( round.deck, round.players );
     return round
 }
+
+function discard( player, cardName ) {
+  let cardIndex = player.hand.findIndex( card => card.name === cardName );
+  let cardDiscarded = player.hand.splice( cardIndex, 1 )[0];
+  // cardDiscared.rule();
+  player.played.push( cardDiscarded );
+}
+
+function draw( deck, player ) {
+  player.hand.push( deck.pop() );
+}
+
+function deal( deck, players ) {
+  players.forEach( function ( player ) {
+    player.hand.push( deck.pop() );
+  } )
+} 
 
 function saveRound(round) {
     fs.writeFileSync('myround.json', JSON.stringify(round));
@@ -64,7 +91,7 @@ function saveRound(round) {
 
 fs.readFile('round_config.json', function (err, data) {
   if (err) throw err;
-  round = createRound(JSON.parse(data));
+  round = createRound(JSON.parse(data), [ 'Trav', 'JQ' ]);
   saveRound(round);
 });
 
@@ -75,9 +102,9 @@ function randomInt( min, max ) {
 }
 
 function shuffle( deck ) {
-  for ( var i = 0; i < deck.length - 1; i++ ) {
-    var j = randomInt( 0, deck.length - 1 );
-    var temp =  deck[i];
+  for ( let i = 0; i < deck.length - 1; i++ ) {
+    let j = randomInt( 0, deck.length - 1 );
+    let temp =  deck[i];
     deck[i] = deck[j];
     deck[j] = temp;
   }
