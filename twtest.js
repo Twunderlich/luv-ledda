@@ -1,11 +1,97 @@
-const fs = require( 'fs' );
 
-const DECKS = JSON.parse( fs.readFileSync( 'decks.json' ) );
-const CARDS = JSON.parse( fs.readFileSync('cards.json' ) );
-let PLAYERS = [ 'Trav', 'JQ' ];
+let DECKS = [
+  {
+    "name": "Love Letter",
+    "recipe": [
+      {
+        "card": "Guard",
+        "quantity": 5
+      },
+      {
+        "card": "Priest",
+        "quantity": 2
+      },
+      {
+        "card": "Baron",
+        "quantity": 2
+      },
+      {
+        "card": "Handmaid",
+        "quantity": 2
+      },
+      {
+        "card": "Prince",
+        "quantity": 2
+      },
+      {
+        "card": "King",
+        "quantity": 1
+      },
+      {
+        "card": "Countess",
+        "quantity": 1
+      },
+      {
+        "card": "Princess",
+        "quantity": 1
+      }
+    ]
+  }
+];
+
+let CARDS = [
+  {
+    "rank": 1,
+    "name": "Guard",
+    "img": "guard.jpg",
+    "rule": "Guess a player's hand; if correct the player is out."
+  },
+  {
+    "rank": 2,
+    "name": "Priest",
+    "img": "priest.jpg",
+    "rule": "Choose another player: Look at their hand."
+  },
+  {
+    "rank": 3,
+    "name": "Baron",
+    "img": "baron.jpg",
+    "rule": "Choose another player: Compare hands; player with lower value is out."
+  },
+  {
+    "rank": 4,
+    "name": "Handmaid",
+    "img": "handmaid.jpg",
+    "rule": "Until next turn, ignore all effects from other player's cards."
+  },
+  {
+    "rank": 5,
+    "name": "Prince",
+    "img": "prince.jpg",
+    "rule": "Choose any player: They discard their hand and draw new card."
+  },
+  {
+    "rank": 6,
+    "name": "King",
+    "img": "king.jpg",
+    "rule": "Choose another player: Trade hands with them"
+  },
+  {
+    "rank": 7,
+    "name": "Countess",
+    "img": "countess.jpg",
+    "rule": "if you have this card and 'King' or 'Prince': You must discard this card."
+  },
+  {
+    "rank": 8,
+    "name": "Princess",
+    "img": "princess.jpg",
+    "rule": "If this card is discarded: you are out."
+  }
+];
+let PLAYERS = [ 'Trav', 'JQ', 'Player1' ];
 // let PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
 let ROUND = createRound( DECKS[ 0 ] , PLAYERS )
-console.log( ROUND )
 
 function createRound( deck, players ) {
     let round = {};
@@ -47,6 +133,37 @@ function makePlayers( players ) {
   } );
   return playerObjects;
 }
+
+function updateActivePlayer( round ) {
+  let index = ROUND.turn_order.findIndex( function (player) {
+    return player === ROUND.active_player;
+  } ) + 1;
+  let activePlayer;
+
+  for ( let i = 0; i < round.turn_order.length; i++ ) {
+    if ( ROUND.turn_order.length === index ) {
+      index = 0;
+    }
+
+    if ( activePlayer === undefined && ROUND.players.find( function( player ) { return player.name === ROUND.turn_order[ index ] } ).in_round ) {
+        activePlayer = ROUND.turn_order[ index ];
+    } else { 
+      index++;
+    }
+  }
+
+  return activePlayer;
+}
+
+console.log( ROUND.turn_order )
+console.log( ROUND.active_player )
+ROUND.players[ 1 ].in_round = false 
+ROUND.active_player = updateActivePlayer( ROUND )
+console.log( ROUND.active_player )
+ROUND.active_player = updateActivePlayer( ROUND )
+console.log( ROUND.active_player )
+ROUND.active_player = updateActivePlayer( ROUND )
+console.log( ROUND.active_player );
 
 function discard( player, cardName ) {
   let cardIndex = player.hand.findIndex( card => card.name === cardName );
