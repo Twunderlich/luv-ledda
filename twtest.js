@@ -156,14 +156,14 @@ function updateActivePlayer( round ) {
 }
 
 console.log( ROUND.turn_order )
-console.log( ROUND.active_player )
-ROUND.players[ 1 ].in_round = false 
+console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
+ROUND.players[ 2 ].in_round = false 
 ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player )
+console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
 ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player )
+console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
 ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player );
+console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round );
 
 function discard( player, cardName ) {
   let cardIndex = player.hand.findIndex( card => card.name === cardName );
