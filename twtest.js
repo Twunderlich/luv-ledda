@@ -5,35 +5,43 @@ let DECKS = [
     "recipe": [
       {
         "card": "Guard",
-        "quantity": 5
+        "quantity": 5,
+        "image": "img/Love_Letter_Card_Guard.jpg"
       },
       {
         "card": "Priest",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Priest.jpg"
       },
       {
         "card": "Baron",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Baron.jpg"
       },
       {
         "card": "Handmaid",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Handmaid.jpg"
       },
       {
         "card": "Prince",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Prince.jpg"
       },
       {
         "card": "King",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_King.jpg"
       },
       {
         "card": "Countess",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_King.jpg"
       },
       {
         "card": "Princess",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_Princess,jpg"
       }
     ]
   }
@@ -140,7 +148,7 @@ function updateActivePlayer( round ) {
   } ) + 1;
   let activePlayer;
 
-  for ( let i = 0; i < round.turn_order.length; i++ ) {
+  for ( let i = 0; i < ROUND.turn_order.length; i++ ) {
     if ( ROUND.turn_order.length === index ) {
       index = 0;
     }
@@ -155,15 +163,15 @@ function updateActivePlayer( round ) {
   return activePlayer;
 }
 
-console.log( ROUND.turn_order )
-console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-ROUND.players[ 2 ].in_round = false 
-ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-ROUND.active_player = updateActivePlayer( ROUND )
-console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round );
+// console.log( ROUND.turn_order )
+// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
+// ROUND.players[ 2 ].in_round = false 
+// ROUND.active_player = updateActivePlayer( ROUND )
+// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
+// ROUND.active_player = updateActivePlayer( ROUND )
+// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
+// ROUND.active_player = updateActivePlayer( ROUND )
+// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round );
 
 function discard( player, cardName ) {
   let cardIndex = player.hand.findIndex( card => card.name === cardName );

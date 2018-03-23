@@ -4,35 +4,43 @@
     "recipe": [
       {
         "card": "Guard",
-        "quantity": 5
+        "quantity": 5,
+        "image": "img/Love_Letter_Card_Guard.jpg"
       },
       {
         "card": "Priest",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Priest.jpg"
       },
       {
         "card": "Baron",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Baron.jpg"
       },
       {
         "card": "Handmaid",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Handmaid.jpg"
       },
       {
         "card": "Prince",
-        "quantity": 2
+        "quantity": 2,
+        "image": "img/Love_Letter_Card_Prince.jpg"
       },
       {
         "card": "King",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_King.jpg"
       },
       {
         "card": "Countess",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_King.jpg"
       },
       {
         "card": "Princess",
-        "quantity": 1
+        "quantity": 1,
+        "image": "img/Love_Letter_Card_Princess,jpg"
       }
     ]
   }
