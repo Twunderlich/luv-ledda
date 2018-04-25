@@ -1,3 +1,4 @@
+var round = round || {};
 
 let DECKS = {
     "name": "Love Letter",
@@ -5,42 +6,34 @@ let DECKS = {
     {
       "card": "Guard",
       "quantity": 5,
-      "image": "img/Love_Letter_Card_Guard.jpg"
     },
     {
       "card": "Priest",
       "quantity": 2,
-      "image": "img/Love_Letter_Card_Priest.jpg"
     },
     {
       "card": "Baron",
       "quantity": 2,
-      "image": "img/Love_Letter_Card_Baron.jpg"
     },
     {
       "card": "Handmaid",
       "quantity": 2,
-      "image": "img/Love_Letter_Card_Handmaid.jpg"
     },
     {
       "card": "Prince",
       "quantity": 2,
-      "image": "img/Love_Letter_Card_Prince.jpg"
     },
     {
       "card": "King",
       "quantity": 1,
-      "image": "img/Love_Letter_Card_King.jpg"
     },
     {
       "card": "Countess",
       "quantity": 1,
-      "image": "img/Love_Letter_Card_Countess.jpg"
     },
     {
       "card": "Princess",
       "quantity": 1,
-      "image": "img/Love_Letter_Card_Princess.jpg"
     }
   ]
 };
@@ -49,58 +42,63 @@ let CARDS = [
   {
     "rank": 1,
     "name": "Guard",
-    "img": "guard.jpg", // TODO REMOVE ME??? (or move image from above down to this structure)
-    "rule": "Guess a player's hand; if correct the player is out."
+    "img": "img/Love_Letter_Card_Guard.jpg", // TODO REMOVE ME??? (or move image from above down to this structure)
+    "rule": "Guess a player's hand; if correct the player is out.",
+    "action": () => {
+      const targetPlayerName = window.prompt( 'Select a player' );
+      const targetPlayer = round.players.filter( player => player.name === targetPlayerName )[0];
+      const targetCard = window.prompt( 'Select a Card' );
+      if ( targetPlayer.hand.includes( card => card.name === targetCard ) ) { console.log( true ) }
+    }
   },
   {
     "rank": 2,
     "name": "Priest",
-    "img": "priest.jpg",
+    "img": "img/Love_Letter_Card_Priest.jpg",
     "rule": "Choose another player: Look at their hand."
   },
   {
     "rank": 3,
     "name": "Baron",
-    "img": "baron.jpg",
+    "img": "img/Love_Letter_Card_Baron.jpg",
     "rule": "Choose another player: Compare hands; player with lower value is out."
   },
   {
     "rank": 4,
     "name": "Handmaid",
-    "img": "handmaid.jpg",
+    "img": "img/Love_Letter_Card_Handmaid.jpg",
     "rule": "Until next turn, ignore all effects from other player's cards."
   },
   {
     "rank": 5,
     "name": "Prince",
-    "img": "prince.jpg",
+    "img": "img/Love_Letter_Card_Prince.jpg",
     "rule": "Choose any player: They discard their hand and draw new card."
   },
   {
     "rank": 6,
     "name": "King",
-    "img": "king.jpg",
+    "img": "img/Love_Letter_Card_King.jpg",
     "rule": "Choose another player: Trade hands with them"
   },
   {
     "rank": 7,
     "name": "Countess",
-    "img": "countess.jpg",
+    "img": "img/Love_Letter_Card_Countess.jpg",
     "rule": "if you have this card and 'King' or 'Prince': You must discard this card."
   },
   {
     "rank": 8,
     "name": "Princess",
-    "img": "princess.jpg",
+    "img": "img/Love_Letter_Card_Princess.jpg",
     "rule": "If this card is discarded: you are out."
   }
 ];
 let PLAYERS = [ 'Trav', 'JQ', 'Player1' ];
 // let PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
-let ROUND = createRound( DECKS , PLAYERS )
 
 function createRound( deck, players ) {
-    let round = {};
+    // let round = {};
     round.players = makePlayers( players );
     round.turn_order = shuffle( players );
     round.active_player = round.turn_order[ 0 ];
@@ -126,7 +124,6 @@ function makeDeck( recipe ) {
             id += 1;
             let card = Object.assign({}, template);
             card.id = id;
-            card.img = cardRecipe.image
             deck.push(card);
         }
     } );
@@ -142,18 +139,18 @@ function makePlayers( players ) {
 }
 
 function updateActivePlayer( round ) {
-  let index = ROUND.turn_order.findIndex( function (player) {
-    return player === ROUND.active_player;
+  let index = round.turn_order.findIndex( function (player) {
+    return player === round.active_player;
   } ) + 1;
   let activePlayer;
 
-  for ( let i = 0; i < ROUND.turn_order.length; i++ ) {
-    if ( ROUND.turn_order.length === index ) {
+  for ( let i = 0; i < round.turn_order.length; i++ ) {
+    if ( round.turn_order.length === index ) {
       index = 0;
     }
 
-    if ( activePlayer === undefined && ROUND.players.find( function( player ) { return player.name === ROUND.turn_order[ index ] } ).in_round ) {
-        activePlayer = ROUND.turn_order[ index ];
+    if ( activePlayer === undefined && round.players.find( function( player ) { return player.name === round.turn_order[ index ] } ).in_round ) {
+        activePlayer = round.turn_order[ index ];
     } else {
       index++;
     }

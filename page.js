@@ -1,14 +1,14 @@
-
+var round = round || {}
 
 
 let bt_start_game = document.querySelector( "#start-game" );
 
 bt_start_game.addEventListener( "click", () => {
-  let round = createRound( DECKS, PLAYERS );
+  round = createRound( DECKS, PLAYERS );
   round.players.forEach(function (player, index) {
     initPlayer(player, index);
   })
-  localStorage.setItem( 'ROUND', round )
+  // localStorage.setItem( 'ROUND', round )
   bt_start_game.setAttribute( "display", "none" );
   takeTurn(round.active_player, round)
 } );
@@ -32,13 +32,13 @@ function createImg(card, tableua) {
   myimg.addEventListener('click', (mouseEvent) => {
     let activePlayer = round.players.filter(function (player) {
         return player.name == round.active_player;
-    })
+    })[0];
     if (activePlayer.hand.includes(card)){
         activePlayer.hand.splice(activePlayer.hand.indexOf(card), 1);
         // tableua.removeChild(myimg)
         playCard(card);
         activePlayer.played.push(card);
-        myimg.classList.add('card reduced')
+        myimg.classList.add('reduced')
         // tableua.addChild(myimg)
     }
   })
@@ -63,6 +63,7 @@ function takeTurn(name, round) {
 
 function playCard(card) {
     console.log('you played card ' + card.name)
+    card.action();
 }
 
 // function passTheTurn(round) {
