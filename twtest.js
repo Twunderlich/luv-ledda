@@ -1,57 +1,55 @@
 
-let DECKS = [
-  {
+let DECKS = {
     "name": "Love Letter",
     "recipe": [
-      {
-        "card": "Guard",
-        "quantity": 5,
-        "image": "img/Love_Letter_Card_Guard.jpg"
-      },
-      {
-        "card": "Priest",
-        "quantity": 2,
-        "image": "img/Love_Letter_Card_Priest.jpg"
-      },
-      {
-        "card": "Baron",
-        "quantity": 2,
-        "image": "img/Love_Letter_Card_Baron.jpg"
-      },
-      {
-        "card": "Handmaid",
-        "quantity": 2,
-        "image": "img/Love_Letter_Card_Handmaid.jpg"
-      },
-      {
-        "card": "Prince",
-        "quantity": 2,
-        "image": "img/Love_Letter_Card_Prince.jpg"
-      },
-      {
-        "card": "King",
-        "quantity": 1,
-        "image": "img/Love_Letter_Card_King.jpg"
-      },
-      {
-        "card": "Countess",
-        "quantity": 1,
-        "image": "img/Love_Letter_Card_King.jpg"
-      },
-      {
-        "card": "Princess",
-        "quantity": 1,
-        "image": "img/Love_Letter_Card_Princess,jpg"
-      }
-    ]
-  }
-];
+    {
+      "card": "Guard",
+      "quantity": 5,
+      "image": "img/Love_Letter_Card_Guard.jpg"
+    },
+    {
+      "card": "Priest",
+      "quantity": 2,
+      "image": "img/Love_Letter_Card_Priest.jpg"
+    },
+    {
+      "card": "Baron",
+      "quantity": 2,
+      "image": "img/Love_Letter_Card_Baron.jpg"
+    },
+    {
+      "card": "Handmaid",
+      "quantity": 2,
+      "image": "img/Love_Letter_Card_Handmaid.jpg"
+    },
+    {
+      "card": "Prince",
+      "quantity": 2,
+      "image": "img/Love_Letter_Card_Prince.jpg"
+    },
+    {
+      "card": "King",
+      "quantity": 1,
+      "image": "img/Love_Letter_Card_King.jpg"
+    },
+    {
+      "card": "Countess",
+      "quantity": 1,
+      "image": "img/Love_Letter_Card_Countess.jpg"
+    },
+    {
+      "card": "Princess",
+      "quantity": 1,
+      "image": "img/Love_Letter_Card_Princess.jpg"
+    }
+  ]
+};
 
 let CARDS = [
   {
     "rank": 1,
     "name": "Guard",
-    "img": "guard.jpg",
+    "img": "guard.jpg", // TODO REMOVE ME??? (or move image from above down to this structure)
     "rule": "Guess a player's hand; if correct the player is out."
   },
   {
@@ -99,7 +97,7 @@ let CARDS = [
 ];
 let PLAYERS = [ 'Trav', 'JQ', 'Player1' ];
 // let PLAYERS = JSON.parse( fs.readFileSync( 'players.json' ) );
-let ROUND = createRound( DECKS[ 0 ] , PLAYERS )
+let ROUND = createRound( DECKS , PLAYERS )
 
 function createRound( deck, players ) {
     let round = {};
@@ -107,11 +105,11 @@ function createRound( deck, players ) {
     round.turn_order = shuffle( players );
     round.active_player = round.turn_order[ 0 ];
     round.deck = shuffle( makeDeck( deck.recipe ) );
-    round.set_aside_face_down = [ round.deck.pop() ]; 
+    round.set_aside_face_down = [ round.deck.pop() ];
     round.set_aside_face_up = function() {
       if ( round.players.length === 2 ) {
         return round.deck.splice( round.deck.length - 3, 3 );
-      } 
+      }
     }();
     deal( round.deck, round.players );
     return round
@@ -128,6 +126,7 @@ function makeDeck( recipe ) {
             id += 1;
             let card = Object.assign({}, template);
             card.id = id;
+            card.img = cardRecipe.image
             deck.push(card);
         }
     } );
@@ -155,7 +154,7 @@ function updateActivePlayer( round ) {
 
     if ( activePlayer === undefined && ROUND.players.find( function( player ) { return player.name === ROUND.turn_order[ index ] } ).in_round ) {
         activePlayer = ROUND.turn_order[ index ];
-    } else { 
+    } else {
       index++;
     }
   }
@@ -165,7 +164,7 @@ function updateActivePlayer( round ) {
 
 // console.log( ROUND.turn_order )
 // console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-// ROUND.players[ 2 ].in_round = false 
+// ROUND.players[ 2 ].in_round = false
 // ROUND.active_player = updateActivePlayer( ROUND )
 // console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
 // ROUND.active_player = updateActivePlayer( ROUND )
@@ -181,14 +180,16 @@ function discard( player, cardName ) {
 }
 
 function draw( deck, player ) {
-  player.hand.push( deck.pop() );
+  let card = deck.pop()
+  player.hand.push( card );
+  return card;
 }
 
 function deal( deck, players ) {
-  players.forEach( function ( player ) {
-    player.hand.push( deck.pop() );
-  } )
-} 
+  players.forEach(function (player) {
+    draw(deck, player);
+  })
+}
 
 function randomInt( min, max ) {
   min = Math.ceil( min );
