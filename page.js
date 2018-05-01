@@ -64,8 +64,12 @@ function takeTurn(name, round) {
 function playCard(card) {
     console.log('you played card ' + card.name)
     card.action();
+    endTurn( round );
 }
 
-// function passTheTurn(round) {
+function endTurn( round ) {
+	round.active_player = updateActivePlayer( round );
+	takeTurn( round.active_player, round );
+}
 
 // }
