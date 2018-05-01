@@ -45,10 +45,27 @@ let CARDS = [
     "img": "img/Love_Letter_Card_Guard.jpg", // TODO REMOVE ME??? (or move image from above down to this structure)
     "rule": "Guess a player's hand; if correct the player is out.",
     "action": () => {
-      const targetPlayerName = window.prompt( 'Select a player' );
-      const targetPlayer = round.players.filter( player => player.name === targetPlayerName )[0];
-      const targetCard = window.prompt( 'Select a Card' );
-      if ( targetPlayer.hand.includes( card => card.name === targetCard ) ) { console.log( true ) }
+      let targetPlayerName;
+      let targetPlayer;
+      let discarded ={ name };
+      do {
+        targetPlayerName = window.prompt( 'Select a player' );
+        targetPlayer = round.players.filter( player => player.name === targetPlayerName )[ 0 ];
+        if ( targetPlayer.played.length !== 0 ) {
+          discarded = targetPlayer.played[ targetPlayer.played.length - 1 ];
+        } else discarded = '';
+      } while ( discarded.name === "Handmaid");
+
+      let targetCard;
+      do {
+        targetCard = window.prompt( 'Select a Card other than "Guard"' );
+      } while ( targetCard.toLowerCase() === "guard" );
+
+      if ( targetPlayer.hand.some( card => card.name === targetCard ) ) {
+        const card = targetPlayer.hand.pop();
+        targetPlayer.played.push( card );
+        targetPlayer.in_round = false;
+      }
     }
   },
   {
@@ -109,9 +126,11 @@ function createRound( deck, players ) {
         return round.deck.splice( round.deck.length - 3, 3 );
       }
     }();
+    round.getPlayerByName = name => round.players.filter( player => player.name === name )[ 0 ];
     deal( round.deck, round.players );
     return round
 }
+
 
 function makeDeck( recipe ) {
     let deck = []
@@ -139,35 +158,12 @@ function makePlayers( players ) {
 }
 
 function updateActivePlayer( round ) {
-  let index = round.turn_order.findIndex( function (player) {
-    return player === round.active_player;
-  } ) + 1;
-  let activePlayer;
-
-  for ( let i = 0; i < round.turn_order.length; i++ ) {
-    if ( round.turn_order.length === index ) {
-      index = 0;
-    }
-
-    if ( activePlayer === undefined && round.players.find( function( player ) { return player.name === round.turn_order[ index ] } ).in_round ) {
-        activePlayer = round.turn_order[ index ];
-    } else {
-      index++;
-    }
-  }
-
-  return activePlayer;
+ let playersInRound = round.players.filter( player => player.in_round === true );
+ playersInRound = playersInRound.concat( playersInRound );
+ let activePlayerIndex = playersInRound.findIndex( player => player.name === round.active_player );
+ let activePlayer = playersInRound[ activePlayerIndex + 1 ].name;
+ return activePlayer;
 }
-
-// console.log( ROUND.turn_order )
-// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-// ROUND.players[ 2 ].in_round = false
-// ROUND.active_player = updateActivePlayer( ROUND )
-// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-// ROUND.active_player = updateActivePlayer( ROUND )
-// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round )
-// ROUND.active_player = updateActivePlayer( ROUND )
-// console.log( ROUND.active_player, ROUND.players.find( player => player.name === ROUND.active_player).in_round );
 
 function discard( player, cardName ) {
   let cardIndex = player.hand.findIndex( card => card.name === cardName );
