@@ -1,53 +1,61 @@
+'use strict'
+
 const http = require( 'http' );
 const path = require( 'path' );
 const url = require( 'url' );
 const fs = require( 'fs' );
-const port = 9090;
-
-const extensions = {
-	".html" : "text/html",
-	".css" : "text/css",
-	".js" : "application/javascript",
-	".png" : "image/png",
-	".gif" : "image/gif",
-	".jpg" : "image/jpeg"
-};
+const port = process.argv[ 2 ] || 9090;
 
 const app = http.createServer( ( req, res ) => {
-	const q = url.parse( req.url, true );
-	const ext = path.extname( q.pathname );
-	const filename = '.' + q.pathname;
-	
-	if ( !extensions[ ext ] ) {
-		res.writeHead( 404, {
-			'Content-Type': 'text/html'
-		} );
-		res.end( 'The requested file type is not supported' );
-	}
-	fs.readFile( filename, ( err, data ) => {
-		const ext = path.extname( filename );
-		const mimeType = extensions[ ext ];
+	console.log( `${ new Date() } Received a ${ req.method } request for ${ req.url }` );
 
-		if ( err ) {
-			res.writeHead( 404, {
-				'Content-Type': mimeType
-			} );
-			console.log( err );
-			return res.end( "404 Not Found" );
-		};
-		console.log( q );
-		res.writeHead( 200, {
-			'Content-Type': mimeType
-		});
-		res.write( data );
-		return res.end();
-	} );
+  	const parsedUrl = url.parse( req.url, true );
+	let pathname = `.${ parsedUrl.pathname }`;
+	const mimeType = {
+    '.ico': 'image/x-icon',
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.json': 'application/json',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.wav': 'audio/wav',
+    '.mp3': 'audio/mpeg',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword',
+    '.eot': 'appliaction/vnd.ms-fontobject',
+    '.ttf': 'aplication/font-sfnt'
+  };
+
+  // fs.exists is deprecated
+  fs.exists( pathname, function ( exist ) {
+  	if ( !exist ) {
+  		res.statusCode = 404;
+  		res.end( `File ${ pathname } not found`)
+  	}
+
+  	if ( fs.statSync( pathname ).isDirectory() ) {
+  		pathname += '/index.html';
+  	}
+
+  	fs.readFile( pathname, function( err, data ) {
+  		if ( err ) {
+  			res.statusCode = 500;
+  			res.end( `Error getting the file: ${ err }.`)
+  		} else {
+  			const ext = path.parse( pathname ).ext;
+  			res.setHeader( 'Content-Type', mimeType[ ext ] || 'text/plain' );
+  			res.end( data );
+  		}
+  	} );
+  } );
 } );
 
 app.listen( port, err => {
 	if ( err ) {
 		return console.log( 'whoops', err );
 	}
-	console.log( `Luv Ledda app listening on port: ${ port }` );
-} );
+	console.log( `${ new Date() } Luv Ledda Server listening on port: ${ port }` );
+} ); 
 
