@@ -20,5 +20,7 @@
     "url": "https://github.com/Twunderlich/luv-ledda/issues"
   },
   "homepage": "https://github.com/Twunderlich/luv-ledda#readme",
-  "dependencies": {}
+  "dependencies": {
+    "websocket": "^1.0.26"
+  }
 }
