@@ -1,5 +1,4 @@
-var round = round || {}
-
+var round = round || {};
 
 let bt_start_game = document.querySelector( "#start-game" );
 
@@ -36,9 +35,9 @@ function createImg(card, tableua) {
     if (activePlayer.hand.includes(card)){
         activePlayer.hand.splice(activePlayer.hand.indexOf(card), 1);
         // tableua.removeChild(myimg)
-        playCard(card);
         activePlayer.played.push(card);
         myimg.classList.add('reduced')
+        playCard(card);
         // tableua.addChild(myimg)
     }
   })
@@ -68,8 +67,13 @@ function playCard(card) {
 }
 
 function endTurn( round ) {
-	round.active_player = updateActivePlayer( round );
-	takeTurn( round.active_player, round );
+  const activePlayers = round.players.filter( p => p.in_round === true );
+  if ( activePlayers.length > 1) {
+	 round.active_player = updateActivePlayer( round );
+	 takeTurn( round.active_player, round );
+  } else {
+    window.prompt( `${ activePlayers[ 0 ].name } won the game!`)
+  }
 }
 
 // }
