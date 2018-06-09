@@ -55,10 +55,14 @@ let CARDS = [
         targetCard = window.prompt( 'Select a Card other than "Guard"' );
       } while ( targetCard.toLowerCase() === "guard" );
 
+      console.log( `...on ${ targetPlayer.name } and they guessed ${ targetCard }.`)
+
       if ( targetPlayer.hand.some( card => card.name === targetCard ) ) {
         const card = targetPlayer.hand.pop();
         targetPlayer.played.push( card );
         targetPlayer.in_round = false;
+        console.log( 'they were correct!' );
+        console.log( `${ targetPlayer.name } is out of the game.` );
       }
     }
   },
@@ -66,9 +70,11 @@ let CARDS = [
     "rank": 2,
     "name": "Priest",
     "img": "img/Love_Letter_Card_Priest.jpg",
-    "rule": "Choose another player: Look at their hand."
+    "rule": "Choose another player: Look at their hand.",
     "action": () => {
       const targetPlayer = selectPlayer();
+      const hand = targetPlayer.hand[ 0 ];
+      console.log( `..on ${ targetPlayer.name }, their hand is ${ hand.name }` );
       // show hand
     }
   },
@@ -78,17 +84,27 @@ let CARDS = [
     "img": "img/Love_Letter_Card_Baron.jpg",
     "rule": "Choose another player: Compare hands; player with lower value is out.",
     "action": () =>  {
-      const targetPlayer = selectPlayer();
+      let targetPlayer;
+      do {
+      targetPlayer = selectPlayer();
+      } while ( targetPlayer.name === round.active_player );
+
+      console.log( `...on ${ targetPlayer }` );
 
       const currentPlayer = round.players.filter( player => player.name === round.active_player )[ 0 ];
-      if ( targetPlayer.hand[ 0 ].rank < currentPlayer.hand[ 0 ].rank ) {
+      if ( targetPlayer.hand[ 0 ].rank === currentPlayer.hand[ 0 ].rank ) {
+        console.log( '...and their cards are the equal, nothing happens');
+      } else if ( targetPlayer.hand[ 0 ].rank < currentPlayer.hand[ 0 ].rank ) {
         const card = targetPlayer.hand.pop();
         targetPlayer.played.push( card );
         targetPlayer.in_round = false;
+        console.log( `...and ${ currentPlayer.name }'s card was higher, ${ targetPlayer.name } is out of the game` );
       } else {
         const card = currentPlayer.hand.pop();
         currentPlayer.played.push( card );
         currentPlayer.in_round = false;
+        console.log( `...and ${ targetPlayer.name }'s card was higher, ${ currentPlayer.name } is out of the game` );
+
       }
     }
   },
@@ -97,10 +113,7 @@ let CARDS = [
     "name": "Handmaid",
     "img": "img/Love_Letter_Card_Handmaid.jpg",
     "rule": "Until next turn, ignore all effects from other player's cards.",
-    "action": () => {
-      const currentPlayer = round.players.filter( player => player.name === round.active_player )[ 0 ];
-      currentPlayer.played.push( currentPlayer.hand.pop() );
-    }
+    "action": () => undefined
   },
   {
     "rank": 5,
@@ -108,7 +121,7 @@ let CARDS = [
     "img": "img/Love_Letter_Card_Prince.jpg",
     "rule": "Choose any player: They discard their hand and draw new card.",
     "action": () => {
-      const currentPlayer = round.players.filter( p => p.name = round.active_player )[ 0 ];
+      const currentPlayer = round.players.filter( p => p.name === round.active_player )[ 0 ];
       if ( !currentPlayer.hand.some( c => c.name === 'Countess' ) ) { 
         const targetPlayer = selectPlayer();
         targetPlayer.played.push( targetPlayer.hand.pop() );
@@ -124,7 +137,7 @@ let CARDS = [
     "img": "img/Love_Letter_Card_King.jpg",
     "rule": "Choose another player: Trade hands with them",
     "action": () => {
-      const currentPlayer = round.players.filter( p => p.name = round.active_player )[ 0 ];
+      const currentPlayer = round.players.filter( p => p.name === round.active_player )[ 0 ];
       if ( !currentPlayer.hand.some( c => c.name === 'Countess' ) ) { 
         const targetPlayer = selectPlayer();
         const temp = targetPlayer.hand.pop();
@@ -195,10 +208,11 @@ function selectPlayer() {
   do {
     targetPlayerName = window.prompt( 'Select a player' );
     targetPlayer = round.players.filter( player => player.name === targetPlayerName )[ 0 ];
-    if ( targetPlayer.played.length !== 0 ) {
+    if ( targetPlayer === undefined) {
+    } else if ( targetPlayer.played.length !== 0 ) {
       lastDiscarded = targetPlayer.played[ targetPlayer.played.length - 1 ].name;
     } else lastDiscarded = '';
-  } while ( lastDiscarded === "Handmaid" || targetPlayer.in_round === false );
+  } while ( lastDiscarded === "Handmaid" || targetPlayer === undefined || targetPlayer.in_round === false );
   return targetPlayer;
 }
 
