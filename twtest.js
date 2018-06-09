@@ -1,3 +1,5 @@
+'use strict'
+
 var round = round || {};
 
 let DECKS = {
@@ -45,16 +47,8 @@ let CARDS = [
     "img": "img/Love_Letter_Card_Guard.jpg", // TODO REMOVE ME??? (or move image from above down to this structure)
     "rule": "Guess a player's hand; if correct the player is out.",
     "action": () => {
-      let targetPlayerName;
-      let targetPlayer;
-      let discarded ={ name };
-      do {
-        targetPlayerName = window.prompt( 'Select a player' );
-        targetPlayer = round.players.filter( player => player.name === targetPlayerName )[ 0 ];
-        if ( targetPlayer.played.length !== 0 ) {
-          discarded = targetPlayer.played[ targetPlayer.played.length - 1 ];
-        } else discarded = '';
-      } while ( discarded.name === "Handmaid");
+
+      const targetPlayer = selectPlayer();
 
       let targetCard;
       do {
@@ -73,42 +67,87 @@ let CARDS = [
     "name": "Priest",
     "img": "img/Love_Letter_Card_Priest.jpg",
     "rule": "Choose another player: Look at their hand."
+    "action": () => {
+      const targetPlayer = selectPlayer();
+      // show hand
+    }
   },
   {
     "rank": 3,
     "name": "Baron",
     "img": "img/Love_Letter_Card_Baron.jpg",
-    "rule": "Choose another player: Compare hands; player with lower value is out."
+    "rule": "Choose another player: Compare hands; player with lower value is out.",
+    "action": () =>  {
+      const targetPlayer = selectPlayer();
+
+      const currentPlayer = round.players.filter( player => player.name === round.active_player )[ 0 ];
+      if ( targetPlayer.hand[ 0 ].rank < currentPlayer.hand[ 0 ].rank ) {
+        const card = targetPlayer.hand.pop();
+        targetPlayer.played.push( card );
+        targetPlayer.in_round = false;
+      } else {
+        const card = currentPlayer.hand.pop();
+        currentPlayer.played.push( card );
+        currentPlayer.in_round = false;
+      }
+    }
   },
   {
     "rank": 4,
     "name": "Handmaid",
     "img": "img/Love_Letter_Card_Handmaid.jpg",
-    "rule": "Until next turn, ignore all effects from other player's cards."
+    "rule": "Until next turn, ignore all effects from other player's cards.",
+    "action": () => {
+      const currentPlayer = round.players.filter( player => player.name === round.active_player )[ 0 ];
+      currentPlayer.played.push( currentPlayer.hand.pop() );
+    }
   },
   {
     "rank": 5,
     "name": "Prince",
     "img": "img/Love_Letter_Card_Prince.jpg",
-    "rule": "Choose any player: They discard their hand and draw new card."
+    "rule": "Choose any player: They discard their hand and draw new card.",
+    "action": () => {
+      const currentPlayer = round.players.filter( p => p.name = round.active_player )[ 0 ];
+      if ( !currentPlayer.hand.some( c => c.name === 'Countess' ) ) { 
+        const targetPlayer = selectPlayer();
+        targetPlayer.played.push( targetPlayer.hand.pop() );
+        draw( round.deck, targetPlayer );
+      } else {
+        window.alert( 'You have the "Countess" in your hand, you must discard her' );
+      }
+    }
   },
   {
     "rank": 6,
     "name": "King",
     "img": "img/Love_Letter_Card_King.jpg",
-    "rule": "Choose another player: Trade hands with them"
+    "rule": "Choose another player: Trade hands with them",
+    "action": () => {
+      const currentPlayer = round.players.filter( p => p.name = round.active_player )[ 0 ];
+      if ( !currentPlayer.hand.some( c => c.name === 'Countess' ) ) { 
+        const targetPlayer = selectPlayer();
+        const temp = targetPlayer.hand.pop();
+        targetPlayer.hand.push( currentPlayer.hand.pop() );
+        currentPlayer.hand.push( temp );
+      } else {
+        window.alert( 'You have the "Countess" in your hand, you must discard her' );
+      }
+    }
   },
   {
     "rank": 7,
     "name": "Countess",
     "img": "img/Love_Letter_Card_Countess.jpg",
-    "rule": "if you have this card and 'King' or 'Prince': You must discard this card."
+    "rule": "if you have this card and 'King' or 'Prince': You must discard this card.",
+    "action": () => undefined
   },
   {
     "rank": 8,
     "name": "Princess",
     "img": "img/Love_Letter_Card_Princess.jpg",
-    "rule": "If this card is discarded: you are out."
+    "rule": "If this card is discarded: you are out.",
+    "action": () => undefined
   }
 ];
 let PLAYERS = [ 'Trav', 'JQ', 'Player1' ];
@@ -149,8 +188,22 @@ function makeDeck( recipe ) {
     return deck
 }
 
+function selectPlayer() {
+  let targetPlayerName;
+  let targetPlayer;
+  let lastDiscarded;
+  do {
+    targetPlayerName = window.prompt( 'Select a player' );
+    targetPlayer = round.players.filter( player => player.name === targetPlayerName )[ 0 ];
+    if ( targetPlayer.played.length !== 0 ) {
+      lastDiscarded = targetPlayer.played[ targetPlayer.played.length - 1 ].name;
+    } else lastDiscarded = '';
+  } while ( lastDiscarded === "Handmaid" || targetPlayer.in_round === false );
+  return targetPlayer;
+}
+
 function makePlayers( players ) {
-  playerObjects = []
+  const playerObjects = []
   players.forEach( function( player ) {
     playerObjects.push( { name: player, hand: [], played: [], in_round: true })
   } );
