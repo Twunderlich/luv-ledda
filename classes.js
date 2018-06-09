@@ -51,7 +51,7 @@ class Round {
   				deck.push( new Card( card ) );
   			}
   		} );
-  	},
+  	}
   	makePlayers( players ) {
   		const players = [];
 		players.forEach( player => {
