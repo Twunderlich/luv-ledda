@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Twunderlich/luv-ledda#readme",
   "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1",
     "websocket": "^1.0.26"
   }
 }
